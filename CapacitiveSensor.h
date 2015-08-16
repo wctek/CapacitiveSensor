@@ -27,6 +27,10 @@ class CapacitiveSensor
 	void set_CS_Timeout_Millis(unsigned long timeout_millis);
 	void reset_CS_AutoCal();
 	void set_CS_AutocaL_Millis(unsigned long autoCal_millis);
+    void set_trigger_level(uint16_t level);
+    void set_samples(uint16_t samples);
+    bool touched();
+    bool touched(uint16_t num_samples);
   // library-accessible "private" interface
   private:
   // variables
@@ -46,6 +50,8 @@ class CapacitiveSensor
 	volatile uint8_t *rOut;
   // methods
 	int SenseOneCycle(void);
+    uint16_t trigger_level; /**< Is sensor being pressed */
+    uint16_t samples; /**< Samples to check if its being touched */
 };
 
 #endif

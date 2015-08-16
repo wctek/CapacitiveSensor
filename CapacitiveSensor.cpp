@@ -29,6 +29,8 @@ CapacitiveSensor::CapacitiveSensor(uint8_t sendPin, uint8_t receivePin)
 	
 	CS_Timeout_Millis = (2000 * (float)loopTimingFactor * (float)F_CPU) / 16000000;
 	CS_AutocaL_Millis = 20000;
+    trigger_level = 100;
+    samples = 30;
     
 	// Serial.print("timwOut =  ");
 	// Serial.println(CS_Timeout_Millis);
@@ -131,6 +133,35 @@ void CapacitiveSensor::set_CS_AutocaL_Millis(unsigned long autoCal_millis){
 
 void CapacitiveSensor::set_CS_Timeout_Millis(unsigned long timeout_millis){
 	CS_Timeout_Millis = (timeout_millis * (float)loopTimingFactor * (float)F_CPU) / 16000000;  // floats to deal with large numbers
+}
+
+void CapacitiveSensor::set_trigger_level(uint16_t level) {
+  trigger_level = level;
+}
+
+void CapacitiveSensor::set_samples(uint16_t num_samples) {
+  samples = num_samples;
+}
+
+/**
+ * Returns whether the sensor is being touched
+ *
+ * This is based on the trigger level that is set.
+ */
+bool CapacitiveSensor::touched() {
+  if((capacitiveSensor(samples)/10) > trigger_level)
+    return true;
+  return false;
+}
+
+/**
+ * Same as touched() except that this version uses the
+ * number of samples passed in by the caller
+ */
+bool CapacitiveSensor::touched(uint16_t num_samples) {
+  if((capacitiveSensor(num_samples)/10) > trigger_level)
+    return true;
+  return false;
 }
 
 // Private Methods /////////////////////////////////////////////////////////////
